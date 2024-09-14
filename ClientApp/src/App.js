@@ -10,6 +10,7 @@ import {
 import { initializeIcons } from '@fluentui/react/lib/Icons';
 import axios from "axios";
 import './App.css';
+import notificationSound from './notification.mp3'; // Import the sound file
 
 // Initialize Fluent UI icons
 initializeIcons();
@@ -25,6 +26,7 @@ function App() {
     const [isBotTyping, setIsBotTyping] = useState(false); // New state for bot typing
     const messageEndRef = useRef(null);
     const typingTimeoutRef = useRef(null);
+    const audioRef = useRef(new Audio(notificationSound)); // Create an Audio object
 
     useEffect(() => {
         // Fetch initial button states from the API
@@ -45,16 +47,24 @@ function App() {
     const handleSendMessage = async () => {
         if (!userMessage) return;
 
+        // Add user message to conversation history instantly
+        const newMessage = { role: "user", text: userMessage };
+        setConversationHistory((prevHistory) => [...prevHistory, newMessage]);
+        setIsTyping(false); // Hide typing bubble when message is sent
+
         try {
             setIsBotTyping(true); // Show bot typing bubble
             const response = await axios.post("/api/Chat", {
                 text: userMessage,
             });
-
-            setConversationHistory(response.data.conversationHistory);
             setUserMessage("");
+            setConversationHistory(response.data.conversationHistory);
             setIsTyping(false); // Hide typing bubble when message is sent
             setIsBotTyping(false); // Hide bot typing bubble when response is received
+
+            if (isSoundOn) {
+                audioRef.current.play(); // Play sound only if sound is on
+            }
         } catch (err) {
             setError("Error communicating with the chatbot API");
             setIsBotTyping(false); // Hide bot typing bubble in case of error
