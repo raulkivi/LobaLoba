@@ -22,6 +22,7 @@ function App() {
     const [isRecordingOn, setIsRecordingOn] = useState(false);
     const [isSystemMessagesOn, setIsSystemMessagesOn] = useState(false);
     const [isTyping, setIsTyping] = useState(false);
+    const [isBotTyping, setIsBotTyping] = useState(false); // New state for bot typing
     const messageEndRef = useRef(null);
     const typingTimeoutRef = useRef(null);
 
@@ -45,6 +46,7 @@ function App() {
         if (!userMessage) return;
 
         try {
+            setIsBotTyping(true); // Show bot typing bubble
             const response = await axios.post("/api/Chat", {
                 text: userMessage,
             });
@@ -52,8 +54,10 @@ function App() {
             setConversationHistory(response.data.conversationHistory);
             setUserMessage("");
             setIsTyping(false); // Hide typing bubble when message is sent
+            setIsBotTyping(false); // Hide bot typing bubble when response is received
         } catch (err) {
             setError("Error communicating with the chatbot API");
+            setIsBotTyping(false); // Hide bot typing bubble in case of error
         }
     };
 
@@ -133,6 +137,11 @@ function App() {
                 ))}
                 {isTyping && (
                     <div className="message-bubble typing-bubble">
+                        <p>...</p>
+                    </div>
+                )}
+                {isBotTyping && (
+                    <div className="message-bubble bot-typing-bubble">
                         <p>...</p>
                     </div>
                 )}

@@ -49,3 +49,15 @@
     height: 30px; /* Adjust as needed */
     border-radius: 15px; /* Adjust as needed */
 }
+
+.bot-typing-bubble {
+    background-color: #8a2be2; /* Bot message bubble color */
+    color: white;
+    align-self: flex-start;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px; /* Adjust as needed */
+    height: 30px; /* Adjust as needed */
+    border-radius: 15px; /* Adjust as needed */
+}
