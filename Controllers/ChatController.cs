@@ -44,8 +44,6 @@ namespace Lobabot.Controllers
             // Wait for 1 second before adding the bot response
             await Task.Delay(1000);
 
-
-
             return Ok(new { response = botResponseText, conversationHistory });
         }
 
@@ -72,6 +70,32 @@ namespace Lobabot.Controllers
         {
             buttonStates = newButtonStates;
             return Ok(buttonStates);
+        }
+
+        // POST api/chat/audio
+        [HttpPost("audio")]
+        public async Task<IActionResult> PostAudio()
+        {
+            var formCollection = await Request.ReadFormAsync();
+            var file = formCollection.Files.FirstOrDefault();
+
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No audio file uploaded.");
+            }
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                // Process the audio file here
+                // For simplicity, we are just echoing back a fixed response
+                string botResponseText = "👩🏻‍🚀 I received your audio message.";
+
+                // Create bot message
+                AddBotMessage(botResponseText);
+
+                return Ok(new { response = botResponseText, conversationHistory });
+            }
         }
     }
 }

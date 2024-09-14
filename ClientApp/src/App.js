@@ -24,8 +24,11 @@ function App() {
     const [isSystemMessagesOn, setIsSystemMessagesOn] = useState(false);
     const [isTyping, setIsTyping] = useState(false);
     const [isBotTyping, setIsBotTyping] = useState(false); // New state for bot typing
+    const [mediaRecorder, setMediaRecorder] = useState(null);
+    const [audioChunks, setAudioChunks] = useState([]);
     const messageEndRef = useRef(null);
     const typingTimeoutRef = useRef(null);
+    const recordingTimeoutRef = useRef(null);
     const audioRef = useRef(new Audio(notificationSound)); // Create an Audio object
 
     useEffect(() => {
@@ -43,6 +46,59 @@ function App() {
 
         fetchButtonStates();
     }, []);
+
+    useEffect(() => {
+        if (isRecordingOn) {
+            startRecording();
+        } else {
+            stopRecording();
+        }
+    }, [isRecordingOn]);
+
+    const startRecording = () => {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+                const recorder = new MediaRecorder(stream);
+                setMediaRecorder(recorder);
+
+                recorder.ondataavailable = event => {
+                    setAudioChunks(prev => [...prev, event.data]);
+                };
+
+                recorder.start();
+
+                recorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const formData = new FormData();
+                    formData.append('file', audioBlob, 'recording.wav');
+
+                    try {
+                        const response = await axios.post("/api/Chat/Audio", formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        });
+                        setConversationHistory(response.data.conversationHistory);
+                        if (isSoundOn) {
+                            audioRef.current.play(); // Play sound only if sound is on
+                        }
+                    } catch (err) {
+                        setError("Error communicating with the chatbot API");
+                    }
+                };
+            })
+            .catch(err => {
+                setError("Error accessing microphone");
+            });
+    };
+
+    const stopRecording = () => {
+        if (mediaRecorder) {
+            mediaRecorder.stop();
+            setMediaRecorder(null);
+            setAudioChunks([]);
+        }
+    };
 
     const handleSendMessage = async () => {
         if (!userMessage) return;
