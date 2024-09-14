@@ -1,0 +1,51 @@
+﻿.message-container {
+    display: flex;
+    flex-direction: column; /* Stack messages vertically */
+    max-width: 400px; /* Set maximum width */
+    min-height: 400px; /* Set minimum height */
+    max-height: 500px; /* Set maximum height */
+    overflow-y: auto; /* Add vertical scrollbar if needed */
+    margin-left: 0; /* Align to the left */
+}
+
+.message-bubble {
+    padding: 2px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: inline-block; /* Adjust size based on text */
+    word-wrap: break-word;
+}
+
+.message-bubble p {
+    margin: 0; /* Remove default margin */
+    background-color: transparent; /* Ensure text background is transparent */
+}
+
+.user-message {
+    background-color: #0078d4; /* Blue color */
+    color: white;
+    align-self: flex-end;
+    text-align: right;
+    margin-left: auto;
+}
+
+.bot-message {
+    background-color: #8a2be2; /* Violet color */
+    color: white;
+    align-self: flex-start;
+    text-align: left;
+    margin-right: auto;
+}
+
+/* Typing bubble styles */
+.typing-bubble {
+    background-color: #0078d4; /* Same color as user message */
+    color: white;
+    align-self: flex-end;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px; /* Adjust as needed */
+    height: 30px; /* Adjust as needed */
+    border-radius: 15px; /* Adjust as needed */
+}

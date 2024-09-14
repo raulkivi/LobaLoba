@@ -1,0 +1,12 @@
+﻿body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f3f2f1;
+    padding: 20px;
+}
+
+p {
+    padding: 8px;
+    background-color: #e1dfdd;
+    border-radius: 5px;
+    margin: 5px 0;
+}
