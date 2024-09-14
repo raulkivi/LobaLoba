@@ -29,27 +29,34 @@ namespace Lobabot.Controllers
                 Role = "user",
                 Text = message.Text
             };
+            conversationHistory.Add(userMessage);
 
             // You can add logic here to process the user's input
             // For simplicity, we are just echoing back the input
             string botResponseText = $"👩🏻‍🚀 You said '{message.Text}'";
 
             // Create bot message
+            AddBotMessage(botResponseText);
+
+            AddBotMessage("1. Kala");
+            AddBotMessage("2. Liha");
+
+            // Wait for 1 second before adding the bot response
+            await Task.Delay(1000);
+
+
+
+            return Ok(new { response = botResponseText, conversationHistory });
+        }
+
+        private static void AddBotMessage(string botResponseText)
+        {
             var botMessage = new ChatMessageWithRole
             {
                 Role = "bot",
                 Text = botResponseText
             };
-
-            // Save the chat to the conversation history
-            conversationHistory.Add(userMessage);
-
-            // Wait for 1 second before adding the bot response
-            await Task.Delay(1000);
-
             conversationHistory.Add(botMessage);
-
-            return Ok(new { response = botResponseText, conversationHistory });
         }
 
         // GET api/chat/buttonstates

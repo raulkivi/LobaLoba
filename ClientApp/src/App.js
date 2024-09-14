@@ -124,6 +124,13 @@ function App() {
         }, 1000);
     };
 
+    const handleBotMessageClick = async (message) => {
+        const regex = /^[1-9]\. /;
+        if (regex.test(message)) {
+            setUserMessage(`I select [${message}]`);
+        }
+    };
+
     useEffect(() => {
         if (messageEndRef.current) {
             messageEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -140,8 +147,11 @@ function App() {
 
             <div className="message-container" style={{ marginBottom: 20 }}>
                 {conversationHistory.map((msg, index) => (
-                    <div key={index}
-                        className={`message-bubble ${msg.role === "user" ? "user-message" : "bot-message"}`}>
+                    <div
+                        key={index}
+                        className={`message-bubble ${msg.role === "user" ? "user-message" : "bot-message"}`}
+                        onClick={() => msg.role === "bot" && handleBotMessageClick(msg.text)}
+                    >
                         <p style={{ whiteSpace: 'pre-wrap' }}>{msg.text}</p>
                     </div>
                 ))}
