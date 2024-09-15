@@ -1,6 +1,7 @@
 ﻿using Lobabot.models;
 using Lobabot.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Lobabot.Controllers
 {
@@ -30,6 +31,9 @@ namespace Lobabot.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ChatMessage message)
         {
+
+            _logger.LogInformation("Received user message: {Message}", message.Text);
+
             // Create user message
             var userMessage = new ChatMessageWithRole
             {
@@ -50,6 +54,8 @@ namespace Lobabot.Controllers
 
             // Wait for 1 second before adding the bot response
             await Task.Delay(1000);
+
+            _logger.LogInformation("Updated conversation history send: {Message}", JsonConvert.SerializeObject(conversationHistory, Formatting.Indented));
 
             return Ok(new { response = botResponseText, conversationHistory });
         }
@@ -75,7 +81,7 @@ namespace Lobabot.Controllers
         [HttpPost("buttonstates")]
         public async Task<IActionResult> UpdateButtonStatesAsync([FromBody] ButtonStates newButtonStates)
         {
-            var message = "Buttons state changed";
+            var message = $"Buttons state changed {newButtonStates}";
             _logger.LogInformation("Received log message: {Message}", message);
 
             buttonStates = newButtonStates;
