@@ -5,13 +5,13 @@ import {
     Stack,
     MessageBar,
     MessageBarType,
-    IconButton,
-} from "@fluentui/react";
+   } from "@fluentui/react";
 import { initializeIcons } from '@fluentui/react/lib/Icons';
 import axios from "axios";
 import './App.css';
 import notificationSound from './notification.mp3'; // Import the sound file
 import SystemPanel from "./SystemPanel";
+import ControlPanel from "./ControlPanel";
 
 // Initialize Fluent UI icons
 initializeIcons();
@@ -255,26 +255,14 @@ function App() {
                         <PrimaryButton text="Send" onClick={handleSendMessage} />
                     </Stack>
 
-                    <Stack horizontal tokens={{ childrenGap: 10 }} style={{ marginTop: 10 }}>
-                        <IconButton
-                            iconProps={{ iconName: isSoundOn ? 'Volume3' : 'Volume0' }} // Sound on/off icon
-                            title="Sound On/Off"
-                            ariaLabel="Sound On/Off"
-                            onClick={handleSoundToggle}
-                        />
-                        <IconButton
-                            iconProps={{ iconName: isRecordingOn ? 'Microphone' : 'MicOff2' }} // Recording on/off icon
-                            title="Recording On/Off"
-                            ariaLabel="Recording On/Off"
-                            onClick={handleRecordingToggle}
-                        />
-                        <IconButton
-                            iconProps={{ iconName: isSystemMessagesOn ? 'MessageFill' : 'Message' }} // System messages on/off icon
-                            title="System Messages On/Off"
-                            ariaLabel="System Messages On/Off"
-                            onClick={handleSystemMessagesToggle}
-                        />
-                    </Stack>
+                    <ControlPanel
+                        isSoundOn={isSoundOn}
+                        isRecordingOn={isRecordingOn}
+                        isSystemMessagesOn={isSystemMessagesOn}
+                        handleSoundToggle={handleSoundToggle}
+                        handleRecordingToggle={handleRecordingToggle}
+                        handleSystemMessagesToggle={handleSystemMessagesToggle}
+                    />
                 </Stack>
                 {isSystemMessagesOn && (
                     <Stack className="system-panel" style={{ flex: 1 }} >
