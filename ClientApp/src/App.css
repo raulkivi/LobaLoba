@@ -68,6 +68,7 @@
     margin: 5px;
     background-color: #ededed;
     border-radius: 5px;
+    max-height: 675px; /* Set maximum height */
 }
 
 .user-panel {
@@ -83,4 +84,10 @@
 .log-entry {
     font-family: monospace;
     white-space: pre-wrap; /* Preserve whitespace and line breaks */
+}
+
+.system-messages-container {
+    max-height: 800px; /* Adjust the height as needed */
+    overflow-y: auto;
+    padding: 10px; /* Optional: Add some padding */
 }

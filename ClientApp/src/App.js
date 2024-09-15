@@ -184,7 +184,25 @@ function App() {
     const handleBotMessageClick = async (message) => {
         const regex = /^[1-9]\. /;
         if (regex.test(message)) {
-            setUserMessage(`I select [${message}]`);
+            const userMessage = `I select [${message}]`;
+
+            try {
+                setIsBotTyping(true); // Show bot typing bubble
+                const response = await axios.post("/api/Chat", {
+                    text: userMessage,
+                });
+                setUserMessage("");
+                setConversationHistory(response.data.conversationHistory);
+                setIsTyping(false); // Hide typing bubble when message is sent
+                setIsBotTyping(false); // Hide bot typing bubble when response is received
+
+                if (isSoundOn) {
+                    audioRef.current.play(); // Play sound only if sound is on
+                }
+            } catch (err) {
+                setError("Error communicating with the chatbot API");
+                setIsBotTyping(false); // Hide bot typing bubble in case of error
+            }
         }
     };
 
