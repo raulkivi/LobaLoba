@@ -53,7 +53,7 @@ namespace Lobabot.Controllers
             // Wait for 1 second before adding the bot response
             await Task.Delay(1000);
 
-            _logger.LogInformation("Updated conversation history send: {Message}", JsonConvert.SerializeObject(conversationHistory, Formatting.Indented));
+            _logger.LogInformation("Updated conversation history: {Message}", JsonConvert.SerializeObject(conversationHistory, Formatting.Indented));
 
             return Ok(new { response = botResponseText, conversationHistory });
         }
@@ -81,8 +81,7 @@ namespace Lobabot.Controllers
         [HttpPost("buttonstates")]
         public async Task<IActionResult> UpdateButtonStatesAsync([FromBody] ButtonStates newButtonStates)
         {
-            var message = $"Buttons state changed {newButtonStates}";
-            _logger.LogInformation("Received log message: {Message}", message);
+            _logger.LogInformation($"Buttons state changed {newButtonStates}");
 
             buttonStates = newButtonStates;
             return Ok(buttonStates);
@@ -99,6 +98,8 @@ namespace Lobabot.Controllers
             {
                 return BadRequest("No audio file uploaded.");
             }
+
+            _logger.LogInformation($"Received audio {file.Length} bytes");
 
             using (var memoryStream = new MemoryStream())
             {
