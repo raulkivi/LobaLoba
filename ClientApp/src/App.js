@@ -11,6 +11,7 @@ import { initializeIcons } from '@fluentui/react/lib/Icons';
 import axios from "axios";
 import './App.css';
 import notificationSound from './notification.mp3'; // Import the sound file
+import SystemPanel from "./SystemPanel";
 
 // Initialize Fluent UI icons
 initializeIcons();
@@ -200,60 +201,68 @@ function App() {
             {error && (
                 <MessageBar messageBarType={MessageBarType.error}>{error}</MessageBar>
             )}
+            <Stack horizontal tokens={{ childrenGap: 20 }}>
+                <Stack className="user-panel" style={{ flex: 1 }} >
+                    <div className="message-container" style={{ marginBottom: 20 }}>
+                        {conversationHistory.map((msg, index) => (
+                            <div
+                                key={index}
+                                className={`message-bubble ${msg.role === "user" ? "user-message" : "bot-message"}`}
+                                onClick={() => msg.role === "bot" && handleBotMessageClick(msg.text)}
+                            >
+                                <p style={{ whiteSpace: 'pre-wrap' }}>{msg.text}</p>
+                            </div>
+                        ))}
+                        {isTyping && (
+                            <div className="message-bubble typing-bubble">
+                                <p>...</p>
+                            </div>
+                        )}
+                        {isBotTyping && (
+                            <div className="message-bubble bot-typing-bubble">
+                                <p>...</p>
+                            </div>
+                        )}
+                        <div ref={messageEndRef} />
+                    </div>
 
-            <div className="message-container" style={{ marginBottom: 20 }}>
-                {conversationHistory.map((msg, index) => (
-                    <div
-                        key={index}
-                        className={`message-bubble ${msg.role === "user" ? "user-message" : "bot-message"}`}
-                        onClick={() => msg.role === "bot" && handleBotMessageClick(msg.text)}
-                    >
-                        <p style={{ whiteSpace: 'pre-wrap' }}>{msg.text}</p>
-                    </div>
-                ))}
-                {isTyping && (
-                    <div className="message-bubble typing-bubble">
-                        <p>...</p>
-                    </div>
+                    <Stack horizontal tokens={{ childrenGap: 10 }}>
+                        <TextField
+                            label="Your request"
+                            value={userMessage}
+                            onChange={handleUserTyping}
+                            multiline
+                            style={{ width: 300, height: 60 }}
+                        />
+                        <PrimaryButton text="Send" onClick={handleSendMessage} />
+                    </Stack>
+
+                    <Stack horizontal tokens={{ childrenGap: 10 }} style={{ marginTop: 10 }}>
+                        <IconButton
+                            iconProps={{ iconName: isSoundOn ? 'Volume3' : 'Volume0' }} // Sound on/off icon
+                            title="Sound On/Off"
+                            ariaLabel="Sound On/Off"
+                            onClick={handleSoundToggle}
+                        />
+                        <IconButton
+                            iconProps={{ iconName: isRecordingOn ? 'Microphone' : 'MicOff2' }} // Recording on/off icon
+                            title="Recording On/Off"
+                            ariaLabel="Recording On/Off"
+                            onClick={handleRecordingToggle}
+                        />
+                        <IconButton
+                            iconProps={{ iconName: isSystemMessagesOn ? 'MessageFill' : 'Message' }} // System messages on/off icon
+                            title="System Messages On/Off"
+                            ariaLabel="System Messages On/Off"
+                            onClick={handleSystemMessagesToggle}
+                        />
+                    </Stack>
+                </Stack>
+                {isSystemMessagesOn && (
+                    <Stack className="system-panel" style={{ flex: 1 }} >
+                        <SystemPanel />
+                    </Stack>
                 )}
-                {isBotTyping && (
-                    <div className="message-bubble bot-typing-bubble">
-                        <p>...</p>
-                    </div>
-                )}
-                <div ref={messageEndRef} />
-            </div>
-
-            <Stack horizontal tokens={{ childrenGap: 10 }}>
-                <TextField
-                    label="Your request"
-                    value={userMessage}
-                    onChange={handleUserTyping}
-                    multiline
-                    style={{ width: 300, height: 60 }}
-                />
-                <PrimaryButton text="Send" onClick={handleSendMessage} />
-            </Stack>
-
-            <Stack horizontal tokens={{ childrenGap: 10 }} style={{ marginTop: 10 }}>
-                <IconButton
-                    iconProps={{ iconName: isSoundOn ? 'Volume3' : 'Volume0' }} // Sound on/off icon
-                    title="Sound On/Off"
-                    ariaLabel="Sound On/Off"
-                    onClick={handleSoundToggle}
-                />
-                <IconButton
-                    iconProps={{ iconName: isRecordingOn ? 'Microphone' : 'MicOff2' }} // Recording on/off icon
-                    title="Recording On/Off"
-                    ariaLabel="Recording On/Off"
-                    onClick={handleRecordingToggle}
-                />
-                <IconButton
-                    iconProps={{ iconName: isSystemMessagesOn ? 'MessageFill' : 'Message' }} // System messages on/off icon
-                    title="System Messages On/Off"
-                    ariaLabel="System Messages On/Off"
-                    onClick={handleSystemMessagesToggle}
-                />
             </Stack>
         </div>
     );

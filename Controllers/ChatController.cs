@@ -1,6 +1,7 @@
 ﻿using Lobabot.models;
 using Lobabot.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Lobabot.Controllers
 {
@@ -8,6 +9,10 @@ namespace Lobabot.Controllers
     [ApiController]
     public class ChatController : ControllerBase
     {
+        public ChatController(IHubContext<LogHub> hubContext)
+        {
+            this._hubContext = hubContext;
+        }
         // In-memory store for conversation history (for simplicity)
         private static List<ChatMessageWithRole> conversationHistory = new List<ChatMessageWithRole>();
 
@@ -18,6 +23,7 @@ namespace Lobabot.Controllers
             IsRecordingOn = false,
             IsSystemMessagesOn = false
         };
+        private readonly IHubContext<LogHub> _hubContext;
 
         // POST api/chat
         [HttpPost]

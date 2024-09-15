@@ -61,3 +61,10 @@
     height: 30px; /* Adjust as needed */
     border-radius: 15px; /* Adjust as needed */
 }
+
+.system-panel {
+    width: 400px;
+    border: 1px solid darkgrey;
+    margin: 5px;
+    background-color: lightgrey;
+}

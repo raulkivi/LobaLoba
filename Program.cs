@@ -15,6 +15,7 @@ app.Run();
 
 static void ConfigureServices(IServiceCollection services)
 {
+    services.AddSignalR();
     services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     services.AddEndpointsApiExplorer();
@@ -41,10 +42,18 @@ static void ConfigureRequestPipeline(WebApplication app)
 
     app.UseCors("AllowAll");
 
-    app.MapControllers();
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+        endpoints.MapHub<LogHub>("/logHub"); // Add this line to map the LogHub endpoint
+    });
 
     // Configure the SPA middleware runn in root path
-    app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api") && !context.Request.Path.StartsWithSegments("/swagger"), appBuilder =>
+    app.UseWhen(context =>
+    !context.Request.Path.StartsWithSegments("/api") && 
+    !context.Request.Path.StartsWithSegments("/swagger") &&
+    !context.Request.Path.StartsWithSegments("/logHub")
+    , appBuilder =>
     {
         appBuilder.UseSpa(spa =>
         {
@@ -56,6 +65,8 @@ static void ConfigureRequestPipeline(WebApplication app)
             }
         });
     });
+
+
 
     // Fallback to serve the React app for any non-API routes
     //app.MapFallbackToFile("index.html");
