@@ -1,6 +1,5 @@
-   using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR;
 
-   public class LogHub : Hub
-   {
-   }
-   
+public class LogHub : Hub
+{
+}

@@ -1,7 +1,6 @@
 ﻿using Lobabot.models;
 using Lobabot.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 
 namespace Lobabot.Controllers
 {
@@ -9,9 +8,11 @@ namespace Lobabot.Controllers
     [ApiController]
     public class ChatController : ControllerBase
     {
-        public ChatController(IHubContext<LogHub> hubContext)
+
+        private readonly ILogger<ChatController> _logger;
+        public ChatController(ILogger<ChatController> logger)
         {
-            this._hubContext = hubContext;
+            _logger = logger;
         }
         // In-memory store for conversation history (for simplicity)
         private static List<ChatMessageWithRole> conversationHistory = new List<ChatMessageWithRole>();
@@ -23,7 +24,7 @@ namespace Lobabot.Controllers
             IsRecordingOn = false,
             IsSystemMessagesOn = false
         };
-        private readonly IHubContext<LogHub> _hubContext;
+
 
         // POST api/chat
         [HttpPost]
@@ -72,8 +73,11 @@ namespace Lobabot.Controllers
 
         // POST api/chat/buttonstates
         [HttpPost("buttonstates")]
-        public IActionResult UpdateButtonStates([FromBody] ButtonStates newButtonStates)
+        public async Task<IActionResult> UpdateButtonStatesAsync([FromBody] ButtonStates newButtonStates)
         {
+            var message = "Buttons state changed";
+            _logger.LogInformation("Received log message: {Message}", message);
+
             buttonStates = newButtonStates;
             return Ok(buttonStates);
         }

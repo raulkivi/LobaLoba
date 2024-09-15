@@ -22,12 +22,9 @@ function SystemPanel() {
 
     return (
         <div>
-            <h2>System Logs</h2>
-            <ul>
-                {logs.map((log, index) => (
-                    <li key={index}>{log}</li>
-                ))}
-            </ul>
+            {logs.map((log, index) => (
+                <div key={index} className="log-entry">{log}</div>
+            ))}
         </div>
     );
 }

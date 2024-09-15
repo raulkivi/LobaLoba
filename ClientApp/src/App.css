@@ -16,10 +16,10 @@
     word-wrap: break-word;
 }
 
-.message-bubble p {
-    margin: 0; /* Remove default margin */
-    background-color: transparent; /* Ensure text background is transparent */
-}
+    .message-bubble p {
+        margin: 0; /* Remove default margin */
+        background-color: transparent; /* Ensure text background is transparent */
+    }
 
 .user-message {
     background-color: #0078d4; /* Blue color */
@@ -63,8 +63,24 @@
 }
 
 .system-panel {
-    width: 400px;
+    width: 600px;
     border: 1px solid darkgrey;
     margin: 5px;
-    background-color: lightgrey;
+    background-color: #ededed;
+    border-radius: 5px;
+}
+
+.user-panel {
+    width: 600px;
+    border: 1px solid #f1deed;
+    margin: 5px;
+    background-color: #f1e8fa;
+    border-radius: 5px;
+    max-width: 420px;
+    padding: 10px;
+}
+
+.log-entry {
+    font-family: monospace;
+    white-space: pre-wrap; /* Preserve whitespace and line breaks */
 }
