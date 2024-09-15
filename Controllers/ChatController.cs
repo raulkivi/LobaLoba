@@ -44,13 +44,11 @@ namespace Lobabot.Controllers
 
             // You can add logic here to process the user's input
             // For simplicity, we are just echoing back the input
-            string botResponseText = $"👩🏻‍🚀 You said '{message.Text}'";
+            string botResponseText = AddBotMessage("Available options:");
 
             // Create bot message
-            AddBotMessage(botResponseText);
-
-            AddBotMessage("1. Kala");
-            AddBotMessage("2. Liha");
+            botResponseText += AddBotMessage("1) Apple");
+            botResponseText += AddBotMessage("2) Microsoft");
 
             // Wait for 1 second before adding the bot response
             await Task.Delay(1000);
@@ -60,7 +58,7 @@ namespace Lobabot.Controllers
             return Ok(new { response = botResponseText, conversationHistory });
         }
 
-        private static void AddBotMessage(string botResponseText)
+        private static string AddBotMessage(string botResponseText)
         {
             var botMessage = new ChatMessageWithRole
             {
@@ -68,6 +66,8 @@ namespace Lobabot.Controllers
                 Text = botResponseText
             };
             conversationHistory.Add(botMessage);
+
+            return $" {botResponseText}; \n";
         }
 
         // GET api/chat/buttonstates

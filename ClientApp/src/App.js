@@ -82,6 +82,7 @@ function App() {
                         setConversationHistory(response.data.conversationHistory);
                         if (isSoundOn) {
                             audioRef.current.play(); // Play sound only if sound is on
+                            speakText(response.data.response);
                         }
                     } catch (err) {
                         setError("Error communicating with the chatbot API");
@@ -121,6 +122,7 @@ function App() {
 
             if (isSoundOn) {
                 audioRef.current.play(); // Play sound only if sound is on
+                speakText(response.data.response); // Speak the bot response
             }
         } catch (err) {
             setError("Error communicating with the chatbot API");
@@ -182,7 +184,7 @@ function App() {
     };
 
     const handleBotMessageClick = async (message) => {
-        const regex = /^[1-9]\. /;
+        const regex = /^[1-9]\) /;
         if (regex.test(message)) {
             const userMessage = `I select [${message}]`;
 
@@ -198,11 +200,27 @@ function App() {
 
                 if (isSoundOn) {
                     audioRef.current.play(); // Play sound only if sound is on
+                    speakText(response.data.response);
                 }
             } catch (err) {
                 setError("Error communicating with the chatbot API");
                 setIsBotTyping(false); // Hide bot typing bubble in case of error
             }
+        }
+    };
+
+    const speakText = (text) => {
+        if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            const voices = window.speechSynthesis.getVoices();
+            const ziraVoice = voices.find(voice => voice.name === "Microsoft Zira - English (United States)");
+
+            if (ziraVoice) {
+                utterance.voice = ziraVoice;
+            }
+            window.speechSynthesis.speak(utterance);
+        } else {
+            console.error("Text-to-Speech not supported in this browser.");
         }
     };
 
