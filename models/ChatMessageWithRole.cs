@@ -2,7 +2,7 @@ namespace Lobabot.Models
 {
     public class ChatMessageWithRole
     {
-        public string Role { get; set; }
-        public string Text { get; set; }
+        public required string Role { get; set; }
+        public required string Text { get; set; }
     }
 }

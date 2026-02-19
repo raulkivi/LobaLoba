@@ -43,19 +43,16 @@ static void ConfigureRequestPipeline(WebApplication app)
 {
     app.UseHttpsRedirection();
 
-    app.UseAuthorization();
-
     app.UseStaticFiles(); // Serve static files
 
     app.UseRouting();
 
     app.UseCors("AllowAll");
 
-    app.UseEndpoints(endpoints =>
-    {
-        endpoints.MapControllers();
-        endpoints.MapHub<LogHub>("/logHub"); // Add this line to map the LogHub endpoint
-    });
+    app.UseAuthorization();
+
+    app.MapControllers();
+    app.MapHub<LogHub>("/logHub");
 
     // Configure the SPA middleware runn in root path
     app.UseWhen(context =>
